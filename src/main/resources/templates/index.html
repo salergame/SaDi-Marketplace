@@ -9,15 +9,6 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh; /* Высота окна браузера */
-        }
-        main {
-            flex: 1; /* Растягивается, занимая доступное пространство */
-        }
-        footer {
-            position: relative; /* Убедимся, что футер останется внизу */
         }
     </style>
 </head>
@@ -27,15 +18,15 @@
         <a class="underline" href="soon.html">
          ShopNow
         </a>
-    </div>
+       </div>
     <header class="bg-black text-white py-3">
         <div class="container mx-auto flex justify-between items-center">
             <div class="text-lg font-bold">SaDi</div>
             <nav class="space-x-4">
-                <a href="sadishop.html" class="hover:text-red-500">Home</a>
-                <a href="contact.html" class="hover:text-red-500">Contact</a>
-                <a href="about.html" class="hover:text-red-500">About</a>
-                <a href="login.html" class="hover:text-red-500">Sign Up</a>
+                <a href="/" class="hover:text-red-500">Home</a>
+                <a href="/contact" class="hover:text-red-500">Contact</a>
+                <a href="/about" class="hover:text-red-500">About</a>
+                <a href="/login" class="hover:text-red-500">Sign Up</a>
             </nav>
             <div class="flex items-center space-x-4">
                 <input class="border rounded-full px-4 py-2 text-black" placeholder="What are you looking for?" type="text"/>
@@ -45,77 +36,420 @@
             </div>
         </div>
     </header>
-    
-    <!-- Основной контент -->
-    <main>
-        <div class="container mx-auto py-8">
-            <h1 class="text-3xl font-bold text-center">Welcome to SaDi Shop</h1>
-            <p class="text-center text-gray-600 mt-4">Explore amazing deals and discounts on your favorite products!</p>
-        </div>
-    </main>
-    
-    <!-- Футер -->
-    <footer class="bg-black text-white py-10">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
-            <div>
-                <h2 class="text-2xl font-bold mb-4">SaDi</h2>
-                <h3 class="text-lg font-semibold mb-2">Subscribe</h3>
-                <p class="mb-4">Get 10% off your first order</p>
-                <form class="flex items-center">
-                    <input class="p-2 rounded-l bg-gray-800 text-white focus:outline-none" placeholder="Enter your email" type="email"/>
-                    <button class="p-2 bg-gray-800 rounded-r" type="submit">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold mb-4">Support</h3>
-                <p>Dilya, Sana, 77777, Astana.</p>
-                <p>sadi@gmail.com</p>
-                <p>+77766556552</p>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold mb-4">Account</h3>
-                <ul>
-                    <li class="mb-2"><a class="hover:underline" href="account.html">My Account</a></li>
-                    <li class="mb-2"><a class="hover:underline" href="login.html">Login</a></li>
-                    <li class="mb-2"><a class="hover:underline" href="register.html">Register</a></li>
-                    <li class="mb-2"><a class="hover:underline" href="cart.html">Cart</a></li>
-                    <li class="mb-2"><a class="hover:underline" href="wishlist.html">Wishlist</a></li>
-                    <li class="mb-2"><a class="hover:underline" href="sadishop.html">Shop</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold mb-4">Quick Link</h3>
-                <ul>
-                    <li class="mb-2"><a class="hover:underline" href="soon.html">Privacy Policy</a></li>
-                    <li class="mb-2"><a class="hover:underline" href="soon.html">Terms Of Use</a></li>
-                    <li class="mb-2"><a class="hover:underline" href="soon.html">FAQ</a></li>
-                    <li class="mb-2"><a class="hover:underline" href="contact.html">Contact</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-lg font-semibold mb-4">Download App</h3>
-                <p class="mb-4">Save $3 with App New User Only</p>
-                <div class="flex items-center mb-4">
-                    <img alt="QR code for app download" class="mr-4" height="80" src="qr.jpg" width="80"/>
-                    <div>
-                        <a class="block mb-2" href="soon.html">
-                            <img alt="Google Play Store" height="40" src="app.jpg" width="120"/>
+    <div class="container mx-auto py-8 flex">
+        <aside class="w-1/4 pr-4">
+            <h2 class="text-2xl font-bold mb-4">Categories</h2>
+            <ul class="space-y-2">
+                <!-- Используем th:each для динамического вывода списка категорий -->
+                <th:block th:each="category : ${categories}">
+                    <li>
+                        <!-- Ссылка для каждой категории, id категории добавляется к URL -->
+                        <a th:href="@{'/categories/' + ${category.id}}" class="block hover:text-red-500">
+                            [[${category.name}]]
                         </a>
-                        <a href="soon.html">
-                            <img alt="Apple App Store" height="40" src="googleplay.jpg" width="120"/>
-                        </a>
+                    </li>
+                </th:block>
+            </ul>
+        </aside>
+        
+        <main class="w-3/4">
+            <section class="mb-8">
+                <div class="relative">
+                    <img src="label.png" class="w-full h-64 object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center">
                     </div>
                 </div>
-                <div class="flex space-x-4">
-                    <a class="text-white hover:text-gray-400" href="soon.html"><i class="fab fa-facebook-f"></i></a>
-                    <a class="text-white hover:text-gray-400" href="soon.html"><i class="fab fa-twitter"></i></a>
-                    <a class="text-white hover:text-gray-400" href="soon.html"><i class="fab fa-instagram"></i></a>
-                    <a class="text-white hover:text-gray-400" href="soon.html"><i class="fab fa-linkedin-in"></i></a>
+            </section>
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">Flash Sales</h2>
+                <div class="flex space-x-4 mb-4">
+                    <div>
+                        <div class="text-sm text-gray-600">Days</div>
+                        <div class="bg-red-500 text-white px-4 py-2 rounded">10</div>
+                    </div>
+                    <div class="text-3xl font-bold text-red-400 flex items-center">:</div>
+                    <div>
+                        <div class="text-sm text-gray-600">Hours</div>
+                        <div class="bg-red-500 text-white px-4 py-2 rounded">01</div>
+                    </div>
+                    <div class="text-3xl font-bold text-red-400 flex items-center">:</div>
+                    <div>
+                        <div class="text-sm text-gray-600">Minutes</div>
+                        <div class="bg-red-500 text-white px-4 py-2 rounded">23</div>
+                    </div>
+                    <div class="text-3xl font-bold text-red-400 flex items-center">:</div>
+                    <div>
+                        <div class="text-sm text-gray-600">Seconds</div>
+                        <div class="bg-red-500 text-white px-4 py-2 rounded">12</div>
+                    </div>
                 </div>
-            </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded shadow">
+                        <a href="details.html">
+                        <img src="iPhone-16-Lozenge-2-Isolated-Colors-pic4_zoom-1500x1500-61347.jpg" class="w-full h-32 object-cover mb-4">
+                        <h3 class="text-lg font-bold">Iphone 16</h3>
+                        <p class="text-red-500">$999</p>
+                        <p class="text-gray-500 line-through">$1100</p>
+                    </a>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow">
+                        <img src="laptop.webp" class="w-full h-32 object-cover mb-4">
+                        <h3 class="text-lg font-bold">Hp laptop</h3>
+                        <p class="text-red-500">$250</p>
+                        <p class="text-gray-500 line-through">$350</p>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow">
+                        <img src="blazer.webp" class="w-full h-32 object-cover mb-4">
+                        <h3 class="text-lg font-bold">Blazer</h3>
+                        <p class="text-red-500">$110</p>
+                        <p class="text-gray-500 line-through">$97</p>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow">
+                        <img src="tshirt.jpg" class="w-full h-32 object-cover mb-4">
+                        <h3 class="text-lg font-bold">T-Shirt</h3>
+                        <p class="text-red-500">$50.55</p>
+                        <p class="text-gray-500 line-through">$35</p>
+                    </div>
+                </div>
+            </section>
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">Browse By Category</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded shadow text-center">
+                        <a href="sadishop.html" class="hover:text-red-500">
+                        <i class="fas fa-mobile-alt text-4xl mb-2"></i>
+                        <h3 class="text-lg font-bold">Iphone</h3>
+                    </a>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow text-center">
+                        <a href="sadishop.html" class="hover:text-red-500">
+                        <i class="fas fa-laptop text-4xl mb-2"></i>
+                        <h3 class="text-lg font-bold">Laptop</h3>
+                        </a>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow text-center">
+                        <a href="sadishop.html" class="hover:text-red-500">
+                        <i class="fas fa-headphones-alt text-4xl mb-2"></i>
+                        <h3 class="text-lg font-bold">Headphones</h3>
+                    </a>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow text-center">
+                        <a href="sadishop.html" class="hover:text-red-500">
+                        <i class="fas fa-tv text-4xl mb-2"></i>
+                        <h3 class="text-lg font-bold">TV</h3>
+                    </a>
+                    </div>
+                </div>
+            </section>
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold mb-4">Best Selling Products</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded shadow">
+                        <img src="gucci.jpg" class="w-full h-32 object-cover mb-4">
+                        <h3 class="text-lg font-bold">Gucci flora</h3>
+                        <p class="text-red-500">$100</p>
+                        <p class="text-gray-500 line-through">$150</p>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow">
+                        <img src="airpods.webp" class="w-full h-32 object-cover mb-4">
+                        <h3 class="text-lg font-bold">Airpods 2 pro</h3>
+                        <p class="text-red-500">$110</p>
+                        <p class="text-gray-500 line-through">$160</p>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow">
+                        <img src="cross.jpg" class="w-full h-32 object-cover mb-4">
+                        <h3 class="text-lg font-bold">Green sneakers</h3>
+                        <p class="text-red-500">$60</p>
+                        <p class="text-gray-500 line-through">$100</p>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow">
+                        <img src="cream.webp" class="w-full h-32 object-cover mb-4">
+                        <h3 class="text-lg font-bold">Hand cream</h3>
+                        <p class="text-red-500">$20</p>
+                        <p class="text-gray-500 line-through">$25</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+  <section class="py-8 bg-black text-white">
+    <div class="container mx-auto">
+     <div class="flex items-center">
+      <div class="w-1/2">
+       <h2 class="text-3xl font-bold mb-4">
+        Enhance Your Music Experience
+       </h2>
+       <div class="flex space-x-4 mt-6">
+        <div class="text-center">
+         <div class="text-3xl font-bold">
+          23
+         </div>
+         <div class="text-sm">
+          Hours
+         </div>
         </div>
-    </footer>
+        <div class="text-center">
+         <div class="text-3xl font-bold">
+          05
+         </div>
+         <div class="text-sm">
+          Days
+         </div>
+        </div>
+        <div class="text-center">
+         <div class="text-3xl font-bold">
+          59
+         </div>
+         <div class="text-sm">
+          Minutes
+         </div>
+        </div>
+        <div class="text-center">
+         <div class="text-3xl font-bold">
+          35
+         </div>
+         <div class="text-sm">
+          Seconds
+         </div>
+        </div>
+       </div>
+       <button class="mt-6 bg-green-500 text-black font-bold py-2 px-6 rounded-full">
+        Buy Now!
+       </button>
+      </div>
+      <div>
+       <img alt="A black portable speaker with a handle and a red logo in the center" height="400" src="jbl.jpg" width="600"/>
+      </div>
+     </div>
+    </div>
+    </div>
+   </section>
+   <section class="py-8">
+    <div class="container mx-auto">
+     <h2 class="text-2xl font-bold mb-4">
+      Explore Our Products
+     </h2>
+     <div class="grid grid-cols-4 gap-4">
+        <div class="col-span-1">
+          <img alt="Product 1" class="w-48 h-48 object-cover" src="black mask.jpeg" />
+          <h3 class="text-lg font-semibold">Black mask</h3>
+          <p class="text-red-500">$29.99</p>
+        </div>
+        <div class="col-span-1">
+          <img alt="Product 2" class="w-48 h-48 object-cover" src="mascara.jpg" />
+          <h3 class="text-lg font-semibold">Mascara</h3>
+          <p class="text-red-500">$39.99</p>
+        </div>
+        <div class="col-span-1">
+          <img alt="Product 3" class="w-48 h-48 object-cover" src="dior.jpg" />
+          <h3 class="text-lg font-semibold">Lipstick Dior</h3>
+          <p class="text-red-500">$49.99</p>
+        </div>
+        <div class="col-span-1">
+          <img alt="Product 4" class="w-48 h-48 object-cover" src="hair.webp" />
+          <h3 class="text-lg font-semibold">Hair dye</h3>
+          <p class="text-red-500">$59.99</p>
+        </div>
+      </div>      
+     </div>
+    </div>
+   </section>
+   <section class="py-8 bg-white">
+    <div class="container mx-auto">
+     <h2 class="text-2xl font-bold mb-4">
+      New Arrival
+     </h2>
+     <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-1">
+       <img alt="New Arrival 1" class="w-full" height="400" src="ps5.jpg" width="600"/>
+       <h3 class="text-lg font-semibold">
+        PlayStation5
+       </h3>
+       <p class="text-red-500">
+        $599.99
+       </p>
+      </div>
+      <div class="col-span-1">
+       <img alt="New Arrival 2" class="w-full" height="400" src="iphone16promax.jpg" width="600"/>
+       <h3 class="text-lg font-semibold">
+        iphone 16 pro max
+       </h3>
+       <p class="text-red-500">
+        $1199.99
+       </p>
+      </div>
+     </div>
+    </div>
+    <br>
+    <div class="flex justify-center space-x-8 mb-12">
+        <div class="text-center">
+         <i class="fas fa-shipping-fast text-4xl mb-2">
+         </i>
+         <div class="font-bold">
+          FREE AND FAST DELIVERY
+         </div>
+         <div class="text-gray-500">
+          Free delivery for all orders over $50
+         </div>
+        </div>
+        <div class="text-center">
+         <i class="fas fa-headset text-4xl mb-2">
+         </i>
+         <div class="font-bold">
+          24/7 CUSTOMER SERVICE
+         </div>
+         <div class="text-gray-500">
+          Friendly 24/7 customer support
+         </div>
+        </div>
+        <div class="text-center">
+         <i class="fas fa-undo text-4xl mb-2">
+         </i>
+         <div class="font-bold">
+          MONEY BACK GUARANTEE
+         </div>
+         <div class="text-gray-500">
+          We return money within 30 days
+         </div>
+        </div>
+    </br>
+   </section>
+   <footer class="bg-black text-white py-10">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
+     <div>
+      <h2 class="text-2xl font-bold mb-4">
+       SaDi
+      </h2>
+      <h3 class="text-lg font-semibold mb-2">
+       Subscribe
+      </h3>
+      <p class="mb-4">
+       Get 10% off your first order
+      </p>
+      <form class="flex items-center">
+       <input class="p-2 rounded-l bg-gray-800 text-white focus:outline-none" placeholder="Enter your email" type="email"/>
+       <button class="p-2 bg-gray-800 rounded-r" type="submit">
+        <i class="fas fa-paper-plane">
+        </i>
+       </button>
+      </form>
+     </div>
+     <div>
+      <h3 class="text-lg font-semibold mb-4">
+       Support
+      </h3>
+      <p>
+       Dilya, Sana, 77777, Astana.
+      </p>
+      <p>
+       sadi@gmail.com
+      </p>
+      <p>
+       +77766556552
+      </p>
+     </div>
+     <div>
+      <h3 class="text-lg font-semibold mb-4">
+       Account
+      </h3>
+      <ul>
+       <li class="mb-2">
+        <a class="hover:underline" href="account.html">
+         My Account
+        </a>
+       </li>
+       <li class="mb-2">
+        <a class="hover:underline" href="login.html">
+         Login
+        </a>
+       </li>
+       <li class="mb-2">
+        <a class="hover:underline" href="register.html">
+         Register
+        </a>
+       </li>
+       <li class="mb-2">
+        <a class="hover:underline" href="cart.html">
+         Cart
+        </a>
+       </li>
+       <li class="mb-2">
+        <a class="hover:underline" href="wishlist.html">
+         Wishlist
+        </a>
+       </li>
+       <li class="mb-2">
+        <a class="hover:underline" href="sadishop.html">
+         Shop
+        </a>
+       </li>
+      </ul>
+     </div>
+     <div>
+      <h3 class="text-lg font-semibold mb-4">
+       Quick Link
+      </h3>
+      <ul>
+       <li class="mb-2">
+        <a class="hover:underline" href="soon.html">
+         Privacy Policy
+        </a>
+       </li>
+       <li class="mb-2">
+        <a class="hover:underline" href="soon.html">
+         Terms Of Use
+        </a>
+       </li>
+       <li class="mb-2">
+        <a class="hover:underline" href="soon.html">
+         FAQ
+        </a>
+       </li>
+       <li class="mb-2">
+        <a class="hover:underline" href="contact.html">
+         Contact
+        </a>
+       </li>
+      </ul>
+     </div>
+     <div>
+      <h3 class="text-lg font-semibold mb-4">
+       Download App
+      </h3>
+      <p class="mb-4">
+       Save $3 with App New User Only
+      </p>
+      <div class="flex items-center mb-4">
+       <img alt="QR code for app download" class="mr-4" height="80" src="qr.jpg" width="80"/>
+       <div>
+        <a class="block mb-2" href="soon.html">
+         <img alt="Google Play Store" height="40" src="app.jpg" width="120"/>
+        </a>
+        <a href="soon.html">
+         <img alt="Apple App Store" height="40" src="googleplay.jpg" width="120"/>
+        </a>
+       </div>
+      </div>
+      <div class="flex space-x-4">
+       <a class="text-white hover:text-gray-400" href="soon.html">
+        <i class="fab fa-facebook-f">
+        </i>
+       </a>
+       <a class="text-white hover:text-gray-400" href="soon.html">
+        <i class="fab fa-twitter">
+        </i>
+       </a>
+       <a class="text-white hover:text-gray-400" href="soon.html">
+        <i class="fab fa-instagram">
+        </i>
+       </a>
+       <a class="text-white hover:text-gray-400" href="soon.html">
+        <i class="fab fa-linkedin-in">
+        </i>
+       </a>
+      </div>
+     </div>
+    </div>
+   </footer>
 </body>
 </html>

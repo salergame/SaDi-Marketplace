@@ -56,8 +56,11 @@
 		<dependency>
         <groupId>org.postgresql</groupId>
         	<artifactId>postgresql</artifactId>
-       		<version>42.5.0</version> <!-- используйте последнюю версию -->
     	</dependency>
+		<dependency>
+    		<groupId>org.flywaydb</groupId>
+    		<artifactId>flyway-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
