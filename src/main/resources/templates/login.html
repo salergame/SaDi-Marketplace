@@ -19,9 +19,9 @@
         <div class="text-lg font-bold">SaDi</div>
         <nav class="space-x-4">
             <a href="/" class="hover:text-red-500">Home</a>
-            <a href="/contact" class="hover:text-red-500">Contact</a>
             <a href="/about" class="hover:text-red-500">About</a>
-            <a href="/login" class="hover:text-red-500">Sign Up</a>
+            <a href="/signup" class="hover:text-red-500">Sign Up</a>
+
         </nav>
         <div class="flex items-center space-x-4">
             <input class="border rounded-full px-4 py-2 text-black" placeholder="What are you looking for?" type="text"/>
@@ -42,21 +42,20 @@
     <p class="mb-8">
      Enter your details below
     </p>
-    <form class="w-full">
-     <div class="mb-4">
-      <input class="w-full border-b-2 py-2 px-4 focus:outline-none" placeholder="Email or Phone Number" type="text"/>
-     </div>
-     <div class="mb-4">
-      <input class="w-full border-b-2 py-2 px-4 focus:outline-none" placeholder="Password" type="password"/>
-     </div>
-     <div class="flex justify-between items-center w-full">
-      <button class="bg-red-500 text-white py-2 px-6 rounded-full">
-       Log In
-      </button>
-      <a class="text-red-500" href="soon.html">
-       Forget Password?
-      </a>
-     </div>
+    <div class="flex justify-between items-center w-full">
+      <form action="/home" method="POST" class="w-full">
+        <div class="mb-4">
+            <input name="username" class="w-full border-b-2 py-2 px-4 focus:outline-none" placeholder="Username" type="text" required />
+        </div>
+        <div class="mb-4">
+            <input name="password" class="w-full border-b-2 py-2 px-4 focus:outline-none" placeholder="Password" type="password" required />
+        </div>
+        <div class="flex justify-between items-center w-full">
+            <button type="submit" class="bg-red-500 text-white py-2 px-6 rounded-full">
+                Log In
+            </button>
+            <a class="text-red-500" href="soon.html">Forget Password?</a>
+        </div>
     </form>
    </div>
   </main>
@@ -149,11 +148,6 @@
        <li class="mb-2">
         <a class="hover:underline" href="soon.html">
          FAQ
-        </a>
-       </li>
-       <li class="mb-2">
-        <a class="hover:underline" href="contact.html">
-         Contact
         </a>
        </li>
       </ul>

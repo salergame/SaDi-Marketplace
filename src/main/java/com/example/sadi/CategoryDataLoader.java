@@ -1,8 +1,6 @@
 package com.example.sadi;
 
-import java.util.Arrays;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -12,29 +10,22 @@ import com.example.sadi.repository.CategoryRepository;
 @Component
 public class CategoryDataLoader implements CommandLineRunner {
 
-    private final CategoryRepository categoryRepository;
-
-    public CategoryDataLoader(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     public void run(String... args) throws Exception {
-        // Проверяем, есть ли категории в базе данных, чтобы избежать повторного добавления
+        // Добавляем категории, если их еще нет в базе данных
         if (categoryRepository.count() == 0) {
-            List<Category> categories = Arrays.asList(
-                    new Category(null, "Woman’s Fashion"),
-                    new Category(null, "Men’s Fashion"),
-                    new Category(null, "Electronics"),
-                    new Category(null, "Home & Lifestyle"),
-                    new Category(null, "Medicine"),
-                    new Category(null, "Sports & Outdoor"),
-                    new Category(null, "Baby’s & Toys"),
-                    new Category(null, "Groceries & Pets"),
-                    new Category(null, "Health & Beauty")
-            );
-
-            categoryRepository.saveAll(categories); // Сохраняем все категории в базе данных
+            categoryRepository.save(new Category(null, "Woman’s Fashion"));
+            categoryRepository.save(new Category(null, "Men’s Fashion"));
+            categoryRepository.save(new Category(null, "Electronics"));
+            categoryRepository.save(new Category(null, "Home & Lifestyle"));
+            categoryRepository.save(new Category(null, "Medicine"));
+            categoryRepository.save(new Category(null, "Sports & Outdoor"));
+            categoryRepository.save(new Category(null, "Baby’s & Toys"));
+            categoryRepository.save(new Category(null, "Groceries & Pets"));
+            categoryRepository.save(new Category(null, "Health & Beauty"));
         }
     }
 }

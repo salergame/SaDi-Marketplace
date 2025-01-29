@@ -24,9 +24,11 @@
             <div class="text-lg font-bold">SaDi</div>
             <nav class="space-x-4">
                 <a href="/" class="hover:text-red-500">Home</a>
-                <a href="/contact" class="hover:text-red-500">Contact</a>
                 <a href="/about" class="hover:text-red-500">About</a>
-                <a href="/login" class="hover:text-red-500">Sign Up</a>
+                <a href="/profile" th:if="${#authentication.principal != null}" class="hover:text-red-500">Profile</a>
+                <a href="/signup" th:if="${#authentication.principal == null}" class="hover:text-red-500">Sign Up</a>
+
+                <a href="/admin" class="hover:text-red-500" sec:authorize="hasRole('ADMIN')">Admin Panel</a>
             </nav>
             <div class="flex items-center space-x-4">
                 <input class="border rounded-full px-4 py-2 text-black" placeholder="What are you looking for?" type="text"/>
@@ -405,11 +407,6 @@
          FAQ
         </a>
        </li>
-       <li class="mb-2">
-        <a class="hover:underline" href="contact.html">
-         Contact
-        </a>
-       </li>
       </ul>
      </div>
      <div>
@@ -453,3 +450,15 @@
    </footer>
 </body>
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const isAuthenticated = /* ваш код для проверки авторизации, например из localStorage */;
+  
+      const authLink = document.getElementById('auth-link');
+      if (isAuthenticated) {
+        authLink.href = '/profile';
+        authLink.textContent = 'Profile';
+      }
+    });
+  </script>
