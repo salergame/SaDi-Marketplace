@@ -14,39 +14,41 @@ import javax.servlet.http.HttpSession;
 
 import com.example.sadi.model.User;
 import com.example.sadi.service.UserService;
+import com.example.sadi.model.User;
+import com.example.sadi.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AuthController {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/login")
     public String loginPage() {
-        return "login";  // Страница логина
+        return "login";
     }
 
-    @PostMapping("/signup")
-    public String login(@RequestParam("username") String username,
-                        @RequestParam("password") String password,
-                        HttpSession session, Model model) {
-
-        // Убираем ручную аутентификацию через сервис. Это будет делать Spring Security.
-        return "redirect:/home";  // После успешной авторизации Spring Security перенаправит сюда
+    @GetMapping("/register")
+    public String registerPage() {
+        return "register";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, Model model) {
-        return "dashboard";  // Это будет отображать информацию о пользователе на dashboard
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/";
+    @PostMapping("/register")
+    public String registerUser(@RequestParam String username, @RequestParam String password) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            return "redirect:/register?error=exists";
+        }
+        User newUser = new User(username, passwordEncoder.encode(password), false);
+        userRepository.save(newUser);
+        return "redirect:/login?registered";
     }
 }
-    

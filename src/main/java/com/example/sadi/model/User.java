@@ -11,10 +11,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -22,11 +28,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private boolean isAdmin;
 
-    public void setPassword(String rawPassword) {
-        this.password = new BCryptPasswordEncoder().encode(rawPassword);
+    public User(String username, String password, boolean isAdmin) {
+        this.username = username;
+        this.password = new BCryptPasswordEncoder().encode(password);
+        this.isAdmin = isAdmin;
     }
 }

@@ -1,19 +1,15 @@
 package com.example.sadi.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import com.example.sadi.model.User;  // Твой пользовательский класс
+import com.example.sadi.model.User;
 import com.example.sadi.repository.UserRepository;
-
-import java.util.Collections;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
+    
     private final UserRepository userRepository;
 
     public CustomUserDetailsService(UserRepository userRepository) {
@@ -22,20 +18,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);  // Получаем пользователя из базы данных
+    User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-
-        // Используем SimpleGrantedAuthority для указания ролей
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER");
-
-        // Создаем объект User с ролями
-        return new org.springframework.security.core.userdetails.User(
-            user.getUsername(),
-            user.getPassword(),
-            Collections.singletonList(authority)  // Передаем список с одной ролью
-        );
+    return org.springframework.security.core.userdetails.User
+            .withUsername(user.getUsername())
+            .password(user.getPassword())  // Теперь getPassword() вызывается у User
+            .roles(user.isAdmin() ? "ADMIN" : "USER")
+            .build();
     }
+
+
 }

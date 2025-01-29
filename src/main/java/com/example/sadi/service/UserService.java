@@ -1,5 +1,6 @@
 package com.example.sadi.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.sadi.model.User;
@@ -9,20 +10,22 @@ import com.example.sadi.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        this.passwordEncoder = new BCryptPasswordEncoder(); // Инициализация BCryptPasswordEncoder
     }
 
     public User authenticate(String username, String password) {
-        User user = findByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
+        User user = findByUsername(username).orElse(null);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user; // Пароль верный
         }
-        return null;
+        return null; // Неверный пароль
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
