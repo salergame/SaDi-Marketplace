@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+    <footer th:fragment="footer" class="bg-black text-white py-10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
+            <div>
+                <h2 class="text-2xl font-bold mb-4">SaDi</h2>
+                <h3 class="text-lg font-semibold mb-2">Subscribe</h3>
+                <p class="mb-4">Get 10% off your first order</p>
+                <form class="flex items-center">
+                    <input class="p-2 rounded-l bg-gray-800 text-white focus:outline-none" placeholder="Enter your email" type="email"/>
+                    <button class="p-2 bg-gray-800 rounded-r" type="submit">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+            <!-- Остальные секции футера -->
+        </div>
+    </footer>
+</body>
+</html> 

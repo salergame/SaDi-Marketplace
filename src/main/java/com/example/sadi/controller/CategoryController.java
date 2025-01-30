@@ -2,43 +2,61 @@ package com.example.sadi.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.sadi.model.Category;
+import com.example.sadi.model.Product;
 import com.example.sadi.service.CategoryService;
+import com.example.sadi.service.ProductService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
+@RequestMapping("/categories")
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+    private final ProductService productService;
 
-    // Этот метод загружает все категории на главную страницу
-    @GetMapping("/")
-    public String indexPage(Model model) {
-        // Получаем все категории
-        List<Category> categories = categoryService.getAllCategories();
-        model.addAttribute("categories", categories);
-        return "index"; // Возвращаем название шаблона index.html
+    public CategoryController(CategoryService categoryService, ProductService productService) {
+        this.categoryService = categoryService;
+        this.productService = productService;
     }
 
-    // Этот метод загружает данные конкретной категории по ID
-    @GetMapping("/categories/{id}")
-    public String getCategory(@PathVariable Long id, Model model) {
-        // Получаем категорию по ID
-        Category category = categoryService.getCategoryById(id);
-        
-        // Если категория не найдена, можно отобразить ошибку
-        if (category == null) {
-            model.addAttribute("error", "Category not found");
-            return "error";  // Страница ошибки
-        }
+    @GetMapping
+    public String getAllCategories(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "category/list";
+    }
 
-        model.addAttribute("category", category);
-        return "category";  // Страница, которая будет отображать детали категории
+    @GetMapping("/{id}")
+    public String showCategoryProducts(@PathVariable Long id, Model model) {
+        try {
+            log.debug("Поиск категории с ID: {}", id);
+            
+            Category category = categoryService.getCategoryById(id);
+            if (category == null) {
+                log.error("Категория не найдена: {}", id);
+                return "redirect:/";
+            }
+
+            List<Product> products = productService.getProductsByCategory(category);
+            log.debug("Найдено {} продуктов для категории {}", 
+                     products != null ? products.size() : 0, 
+                     category.getName());
+            
+            model.addAttribute("category", category);
+            model.addAttribute("products", products);
+            return "category/products";
+            
+        } catch (Exception e) {
+            log.error("Ошибка при показе продуктов категории", e);
+            return "redirect:/";
+        }
     }
 }

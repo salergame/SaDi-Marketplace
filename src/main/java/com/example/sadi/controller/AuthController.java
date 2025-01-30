@@ -1,5 +1,9 @@
 package com.example.sadi.controller;
 
+import java.security.Principal;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class AuthController {
 
+    private final UserService userService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -32,6 +37,64 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @GetMapping("/login")
+    public String loginPage(Principal principal) {
+        if (principal != null) {
+            return "redirect:/";
+        }
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String signupPage(Principal principal) {
+        if (principal != null) {
+            return "redirect:/";
+        }
+        return "register";
+    }
+
+    @PostMapping("/signup")
+    public String signup(@RequestParam String username,
+                        @RequestParam String password,
+                        Model model) {
+        try {
+            if (username == null || username.trim().isEmpty() || 
+                password == null || password.trim().isEmpty()) {
+                model.addAttribute("error", "Имя пользователя и пароль обязательны");
+                return "register";
+            }
+
+            if (userService.findByUsername(username) != null) {
+                model.addAttribute("error", "Пользователь с таким именем уже существует");
+                return "register";
+            }
+
+            User user = new User();
+            user.setUsername(username.trim());
+            user.setPassword(password);
+            user.setAdmin(false);
+            
+            try {
+                userService.save(user);
+                return "redirect:/login?registered=true";
+            } catch (Exception e) {
+                model.addAttribute("error", "Ошибка при сохранении пользователя: " + e.getMessage());
+                return "register";
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "Произошла ошибка при регистрации: " + e.getMessage());
+            return "register";
+        }
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
+        return "profile";
     @GetMapping("/login")
     public String loginPage() {
         return "login";

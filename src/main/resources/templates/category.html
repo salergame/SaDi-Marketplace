@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="${category.name + ' - SaDi'}">Category - SaDi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-black text-white py-3">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-lg font-bold">SaDi</div>
+            <nav class="space-x-4">
+                <a th:href="@{/}" class="hover:text-red-500">Home</a>
+                <a th:href="@{/about}" class="hover:text-red-500">About</a>
+                <a th:href="@{/admin}" sec:authorize="hasRole('ROLE_ADMIN')" class="hover:text-red-500">Admin Panel</a>
+                <a th:href="@{/profile}" sec:authorize="isAuthenticated()" class="hover:text-red-500">Profile</a>
+                <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="hover:text-red-500">Login</a>
+                <a th:href="@{/signup}" sec:authorize="!isAuthenticated()" class="hover:text-red-500">Sign Up</a>
+                <form th:action="@{/logout}" method="post" class="inline" sec:authorize="isAuthenticated()">
+                    <button type="submit" class="hover:text-red-500">Logout</button>
+                </form>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <input class="border rounded-full px-4 py-2 text-black" placeholder="What are you looking for?" type="text"/>
+                <a href="#" class="hover:text-red-500"><i class="fas fa-search"></i></a>
+                <a th:href="@{/wishlist}" sec:authorize="isAuthenticated()" class="hover:text-red-500">
+                    <i class="fas fa-heart"></i>
+                </a>
+                <a th:href="@{/cart}" sec:authorize="isAuthenticated()" class="hover:text-red-500">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold mb-8" th:text="${category.name}">Category Name</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div th:each="product : ${products}" 
+                 class="bg-white rounded-lg shadow-md overflow-hidden">
+                <img th:if="${product.imageUrl}" 
+                     th:src="${product.imageUrl}" 
+                     class="w-full h-48 object-cover"/>
+                <div class="p-4">
+                    <h3 th:text="${product.name}" class="font-semibold mb-2"></h3>
+                    <p th:text="${product.price + ' ₸'}" class="text-red-500 font-bold"></p>
+                    <p th:text="${product.description}" class="text-gray-600 text-sm mt-2"></p>
+                    <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html> 
