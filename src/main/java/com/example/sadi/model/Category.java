@@ -28,4 +28,8 @@ public class Category {
 
     @Column
     private String imageUrl;
+
+    public String getName() {
+        return name;
+    }
 }
