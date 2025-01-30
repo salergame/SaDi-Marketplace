@@ -8,19 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.sadi.model.Product;
 import com.example.sadi.model.User;
 import com.example.sadi.model.WishlistItem;
-import com.example.sadi.repository.WishlistRepository;
+import com.example.sadi.repository.WishlistItemRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class WishlistService {
-    private final WishlistRepository wishlistRepository;
-
-    public WishlistService(WishlistRepository wishlistRepository) {
-        this.wishlistRepository = wishlistRepository;
-    }
+    private final WishlistItemRepository wishlistRepository;
 
     public void addToWishlist(User user, Product product) {
-        if (wishlistRepository.findByUserAndProduct(user, product).isEmpty()) {
+        if (wishlistRepository.findByUserAndProduct(user, product) == null) {
             WishlistItem item = new WishlistItem();
             item.setUser(user);
             item.setProduct(product);
@@ -32,12 +31,11 @@ public class WishlistService {
         return wishlistRepository.findByUser(user);
     }
 
-    public void removeFromWishlist(User user, Product product) {
-        wishlistRepository.findByUserAndProduct(user, product)
-                         .ifPresent(wishlistRepository::delete);
+    public void removeFromWishlist(User user, Long productId) {
+        wishlistRepository.deleteByUserAndProductId(user, productId);
     }
 
     public boolean isInWishlist(User user, Product product) {
-        return wishlistRepository.findByUserAndProduct(user, product).isPresent();
+        return wishlistRepository.findByUserAndProduct(user, product) != null;
     }
 } 

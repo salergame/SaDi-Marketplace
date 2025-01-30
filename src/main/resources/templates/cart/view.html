@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shopping Cart - SaDi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-100">
+    <div th:replace="fragments/header :: header"></div>
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-6">Shopping Cart</h1>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div th:if="${cartItems.empty}" class="text-center py-8">
+                Your cart is empty
+            </div>
+            
+            <div th:unless="${cartItems.empty}">
+                <div th:each="item : ${cartItems}" class="flex items-center py-4 border-b">
+                    <img th:src="${item.product.imageUrl}" class="w-24 h-24 object-cover rounded">
+                    <div class="flex-1 ml-4">
+                        <h3 th:text="${item.product.name}" class="font-semibold"></h3>
+                        <p th:text="'$' + ${item.product.price}" class="text-gray-600"></p>
+                    </div>
+                    <div class="flex items-center">
+                        <button onclick="updateQuantity(this, -1)" class="px-2 py-1 bg-gray-200 rounded">-</button>
+                        <input type="number" th:value="${item.quantity}" 
+                               th:data-product-id="${item.product.id}"
+                               class="w-16 text-center mx-2" min="1">
+                        <button onclick="updateQuantity(this, 1)" class="px-2 py-1 bg-gray-200 rounded">+</button>
+                    </div>
+                    <div class="ml-4">
+                        <span th:text="'$' + ${item.totalPrice}" class="font-semibold"></span>
+                    </div>
+                    <button th:onclick="'removeItem(' + ${item.product.id} + ')'"
+                            class="ml-4 text-red-500 hover:text-red-700">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-6 text-right">
+                    <div class="text-xl font-bold">
+                        Total: <span th:text="'$' + ${total}"></span>
+                    </div>
+                    <button class="mt-4 bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+    function updateQuantity(btn, change) {
+        const input = btn.parentElement.querySelector('input');
+        const productId = input.dataset.productId;
+        const newQuantity = parseInt(input.value) + change;
+        
+        if (newQuantity < 1) return;
+        
+        fetch(`/cart/update/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `quantity=${newQuantity}`
+        })
+        .then(response => {
+            if (response.ok) {
+                input.value = newQuantity;
+                location.reload();
+            }
+        });
+    }
+
+    function removeItem(productId) {
+        fetch(`/cart/remove/${productId}`, {
+            method: 'POST'
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            }
+        });
+    }
+    </script>
+</body>
+</html> 
