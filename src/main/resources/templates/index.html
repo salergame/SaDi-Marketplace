@@ -1,4 +1,6 @@
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,42 +21,34 @@
          ShopNow
         </a>
        </div>
-    <header class="bg-black text-white py-3">
+       <header class="bg-black text-white py-3">
         <div class="container mx-auto flex justify-between items-center">
             <div class="text-lg font-bold">SaDi</div>
             <nav class="space-x-4">
-                <a href="/" class="hover:text-red-500">Home</a>
-                <a href="/about" class="hover:text-red-500">About</a>
-                <a href="/profile" th:if="${#authentication.principal != null}" class="hover:text-red-500">Profile</a>
-                <a href="/signup" th:if="${#authentication.principal == null}" class="hover:text-red-500">Sign Up</a>
-
-                <a href="/admin" class="hover:text-red-500" sec:authorize="hasRole('ADMIN')">Admin Panel</a>
+                <a th:href="@{/}" class="hover:text-red-500">Home</a>
+                <a th:href="@{/about}" class="hover:text-red-500">About</a>
+                <a th:href="@{/admin}" sec:authorize="hasRole('ROLE_ADMIN')" class="hover:text-red-500">Admin Panel</a>
+                <a th:href="@{/profile}" sec:authorize="isAuthenticated()" class="hover:text-red-500">Profile</a>
+                <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="hover:text-red-500">Login</a>
+                <a th:href="@{/signup}" sec:authorize="!isAuthenticated()" class="hover:text-red-500">Sign Up</a>
+                <form th:action="@{/logout}" method="post" class="inline" sec:authorize="isAuthenticated()">
+                    <button type="submit" class="hover:text-red-500">Logout</button>
+                </form>
             </nav>
             <div class="flex items-center space-x-4">
                 <input class="border rounded-full px-4 py-2 text-black" placeholder="What are you looking for?" type="text"/>
-                <a href="error.html" class="hover:text-red-500"><i class="fas fa-search"></i></a>
-                <a href="wishlist.html" class="hover:text-red-500"><i class="fas fa-heart"></i></a>
-                <a href="cart.html" class="hover:text-red-500"><i class="fas fa-shopping-cart"></i></a>
+                <a href="#" class="hover:text-red-500"><i class="fas fa-search"></i></a>
+                <a th:href="@{/wishlist}" sec:authorize="isAuthenticated()" class="hover:text-red-500">
+                    <i class="fas fa-heart"></i>
+                </a>
+                <a th:href="@{/cart}" sec:authorize="isAuthenticated()" class="hover:text-red-500">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
             </div>
         </div>
     </header>
-    <div class="container mx-auto py-8 flex">
-        <aside class="w-1/4 pr-4">
-            <h2 class="text-2xl font-bold mb-4">Categories</h2>
-            <ul class="space-y-2">
-                <!-- Используем th:each для динамического вывода списка категорий -->
-                <th:block th:each="category : ${categories}">
-                    <li>
-                        <!-- Ссылка для каждой категории, id категории добавляется к URL -->
-                        <a th:href="@{'/categories/' + ${category.id}}" class="block hover:text-red-500">
-                            [[${category.name}]]
-                        </a>
-                    </li>
-                </th:block>
-            </ul>
-        </aside>
-        
-        <main class="w-3/4">
+    <div class="container mx-auto py-8">
+        <main class="w-full">
             <section class="mb-8">
                 <div class="relative">
                     <img src="label.png" class="w-full h-64 object-cover">
@@ -86,60 +80,31 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white p-4 rounded shadow">
-                        <a href="details.html">
-                        <img src="iPhone-16-Lozenge-2-Isolated-Colors-pic4_zoom-1500x1500-61347.jpg" class="w-full h-32 object-cover mb-4">
-                        <h3 class="text-lg font-bold">Iphone 16</h3>
-                        <p class="text-red-500">$999</p>
-                        <p class="text-gray-500 line-through">$1100</p>
-                    </a>
-                    </div>
-                    <div class="bg-white p-4 rounded shadow">
-                        <img src="laptop.webp" class="w-full h-32 object-cover mb-4">
-                        <h3 class="text-lg font-bold">Hp laptop</h3>
-                        <p class="text-red-500">$250</p>
-                        <p class="text-gray-500 line-through">$350</p>
-                    </div>
-                    <div class="bg-white p-4 rounded shadow">
-                        <img src="blazer.webp" class="w-full h-32 object-cover mb-4">
-                        <h3 class="text-lg font-bold">Blazer</h3>
-                        <p class="text-red-500">$110</p>
-                        <p class="text-gray-500 line-through">$97</p>
-                    </div>
-                    <div class="bg-white p-4 rounded shadow">
-                        <img src="tshirt.jpg" class="w-full h-32 object-cover mb-4">
-                        <h3 class="text-lg font-bold">T-Shirt</h3>
-                        <p class="text-red-500">$50.55</p>
-                        <p class="text-gray-500 line-through">$35</p>
+                    <div th:each="product : ${products}" class="bg-white p-4 rounded shadow">
+                        <a th:href="@{/products/{id}(id=${product.id})}" class="block hover:opacity-90">
+                            <img th:src="${product.imageUrl}" th:alt="${product.name}" 
+                                 class="w-full h-48 object-cover rounded mb-4"/>
+                            <h3 class="text-lg font-semibold" th:text="${product.name}">Product Name</h3>
+                            <div class="flex items-center mt-2">
+                                <span class="text-red-500 font-bold" th:text="'$' + ${product.price}">$99.99</span>
+                            </div>
+                            <!-- Рейтинг -->
+                            <div class="flex items-center mt-2">
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <i th:class="${i <= product.rating} ? 'fas fa-star text-yellow-500' : 'fas fa-star text-gray-300'"></i>
+                                </th:block>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </section>
             <section class="mb-8">
                 <h2 class="text-2xl font-bold mb-4">Browse By Category</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white p-4 rounded shadow text-center">
-                        <a href="sadishop.html" class="hover:text-red-500">
-                        <i class="fas fa-mobile-alt text-4xl mb-2"></i>
-                        <h3 class="text-lg font-bold">Iphone</h3>
-                    </a>
-                    </div>
-                    <div class="bg-white p-4 rounded shadow text-center">
-                        <a href="sadishop.html" class="hover:text-red-500">
-                        <i class="fas fa-laptop text-4xl mb-2"></i>
-                        <h3 class="text-lg font-bold">Laptop</h3>
+                    <div th:each="category : ${categories}" class="bg-white p-4 rounded shadow">
+                        <a th:href="@{/categories/{id}(id=${category.id})}" class="block hover:opacity-90">
+                            <h3 class="text-lg font-semibold" th:text="${category.name}">Category Name</h3>
                         </a>
-                    </div>
-                    <div class="bg-white p-4 rounded shadow text-center">
-                        <a href="sadishop.html" class="hover:text-red-500">
-                        <i class="fas fa-headphones-alt text-4xl mb-2"></i>
-                        <h3 class="text-lg font-bold">Headphones</h3>
-                    </a>
-                    </div>
-                    <div class="bg-white p-4 rounded shadow text-center">
-                        <a href="sadishop.html" class="hover:text-red-500">
-                        <i class="fas fa-tv text-4xl mb-2"></i>
-                        <h3 class="text-lg font-bold">TV</h3>
-                    </a>
                     </div>
                 </div>
             </section>
@@ -450,15 +415,3 @@
    </footer>
 </body>
 </html>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const isAuthenticated = /* ваш код для проверки авторизации, например из localStorage */;
-  
-      const authLink = document.getElementById('auth-link');
-      if (isAuthenticated) {
-        authLink.href = '/profile';
-        authLink.textContent = 'Profile';
-      }
-    });
-  </script>

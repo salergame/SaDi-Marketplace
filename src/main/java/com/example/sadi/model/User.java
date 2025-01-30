@@ -1,7 +1,6 @@
 package com.example.sadi.model;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,11 +21,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String username;
-    private String password;
-    private boolean isAdmin;
 
-    public void setPassword(String rawPassword) {
-        this.password = new BCryptPasswordEncoder().encode(rawPassword);
+    @Column(nullable = false)
+    private String password;
+
+    @Column(name = "is_admin", nullable = false)
+    private boolean admin = false;
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

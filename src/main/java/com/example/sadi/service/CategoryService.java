@@ -4,11 +4,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.sadi.model.Category;
 import com.example.sadi.repository.CategoryRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
+@Transactional
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -25,11 +30,15 @@ public class CategoryService {
 
     // Метод для получения категории по ID
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElse(null); // Если категория не найдена, вернется null
+        return categoryRepository.findById(id)
+            .orElseGet(() -> {
+                log.error("Категория с ID {} не найдена", id);
+                return null;
+            });
     }
 
     // Метод для добавления новой категории
-    public Category addCategory(Category category) {
+    public Category save(Category category) {
         return categoryRepository.save(category); // Сохраняем категорию в базе данных
     }
 
@@ -46,5 +55,15 @@ public class CategoryService {
             return categoryRepository.save(category); // Сохраняем обновленную категорию
         }
         return null;
+    }
+
+    public Category getCategoryByName(String name) {
+        try {
+            return categoryRepository.findByName(name)
+                    .orElseThrow(() -> new RuntimeException("Category not found: " + name));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${category.name} + ' - SaDi'">Category Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body class="bg-gray-100">
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6" th:text="${category.name}">Category Name</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div th:each="product : ${products}" 
+                 class="bg-white rounded-lg shadow-md overflow-hidden">
+                <a th:href="@{/products/{id}(id=${product.id})}">
+                    <img th:if="${product.imageUrl}" 
+                         th:src="${product.imageUrl}" 
+                         class="w-full h-48 object-cover"/>
+                    <div class="p-4">
+                        <h3 th:text="${product.name}" 
+                            class="text-lg font-semibold mb-2"></h3>
+                        <p th:text="${'$' + product.price}" 
+                           class="text-red-500 font-bold"></p>
+                        <div class="flex items-center mt-2">
+                            <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                <i th:class="${i <= product.rating} ? 'fas fa-star text-yellow-500' : 'fas fa-star text-gray-300'"></i>
+                            </th:block>
+                        </div>
+                        <div class="mt-4 flex space-x-2">
+                            <button th:onclick="'addToCart(' + ${product.id} + ')'"
+                                    class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600">
+                                Add to Cart
+                            </button>
+                            <button th:onclick="'addToWishlist(' + ${product.id} + ')'"
+                                    class="bg-gray-200 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-300">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:inline="javascript">
+    function addToCart(productId) {
+        const token = document.querySelector("meta[name='_csrf']").content;
+        const header = document.querySelector("meta[name='_csrf_header']").content;
+        
+        fetch(`/products/${productId}/addToCart`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [header]: token
+            },
+            body: JSON.stringify({ quantity: 1 })
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Product added to cart!');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding product to cart');
+        });
+    }
+
+    function addToWishlist(productId) {
+        const token = document.querySelector("meta[name='_csrf']").content;
+        const header = document.querySelector("meta[name='_csrf_header']").content;
+        
+        fetch(`/products/${productId}/addToWishlist`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [header]: token
+            }
+        })
+        .then(response => {
+            if (!response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Product added to wishlist!');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding product to wishlist');
+        });
+    }
+    </script>
+</body>
+</html> 

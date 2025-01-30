@@ -1,5 +1,6 @@
 package com.example.sadi.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,16 +23,17 @@ public class Product {
     private Long id;
 
     private String name;
-
-    private double price;
-
-    private double rating;
-
     private String description;
-
-    private boolean deliveryAvailable;
-
+    private Double price;
+    private String imageUrl;
+    
+    @Column(nullable = false)
+    private Boolean deliveryAvailable = true;
+    
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(nullable = false)
+    private Double rating = 0.0;
 }
